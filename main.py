@@ -139,7 +139,7 @@ def send_message(to_user, access_token, region_name, textDay, textNight, temp, d
     data = {
         "touser": to_user,
         "template_id": config["template_id"],
-        "url": "http://weixin.qq.com/download",
+        "url": "https://github.com/KezhanW/yitip/blob/main/more.html",
         "topcolor": "#FF0000",
         "data": {
             # 问候语
