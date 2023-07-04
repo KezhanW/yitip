@@ -87,38 +87,10 @@ def get_birthday(birthday, year, today):
 # 获取天行数据
 def get_tian():
     key = config["tian_key"]
-    # 毒鸡汤
-    ChickenSoup = get_ChickenSoup(key)
-    # 土味情话
-    saylove = get_saylove(key)
     # 星座运势
     ConstellationChart = get_ConstellationChart(key)
-    return ChickenSoup, saylove, ConstellationChart
+    return ConstellationChart
 
-# 毒鸡汤
-def get_ChickenSoup(key):
-    region_url = "http://api.tianapi.com/dujitang/index?key={}".format(key)
-    response = get(region_url).json()
-    if response["code"] != 200:
-        print("毒鸡汤数据获取错误")
-        os.system("pause")
-        sys.exit(1)
-    else:
-        data = response["newslist"][0]["content"]
-    return data
-
-
-# 土味情话
-def get_saylove(key):
-    region_url = "http://api.tianapi.com/saylove/index?key={}".format(key)
-    response = get(region_url).json()
-    if response["code"] != 200:
-        print("土味情话数据获取错误")
-        os.system("pause")
-        sys.exit(1)
-    else:
-        data = response["newslist"][0]["content"]
-    return data
 
 # 星座运势
 def get_ConstellationChart(key):
@@ -140,7 +112,7 @@ def get_ConstellationChart(key):
     return data
 
  
-def send_message(to_user, access_token, region_name, textDay, textNight, temp, dress, ChickenSoup, saylove, ConstellationChart):
+def send_message(to_user, access_token, region_name, textDay, textNight, temp, dress, ChickenSoup, ConstellationChart):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -210,16 +182,6 @@ def send_message(to_user, access_token, region_name, textDay, textNight, temp, d
                 "value": love_days,
                 "color": get_color()
             },
-            # 毒鸡汤
-            "ChickenSoup": {
-                "value": ChickenSoup,
-                "color": get_color()
-            },
-            # 土味情话
-            "saylove": {
-                "value": saylove,
-                "color": get_color()
-            },
             # 星座
             "constellation": {
                 "value": constellation,
@@ -230,7 +192,7 @@ def send_message(to_user, access_token, region_name, textDay, textNight, temp, d
                 "value": ConstellationChart[0]["content"],
                 "color": get_color()
             },
-            # 恋爱指数
+            # 爱情指数
             "loveIndex": {
                 "value": ConstellationChart[1]["content"],
                 "color": get_color()
@@ -240,12 +202,12 @@ def send_message(to_user, access_token, region_name, textDay, textNight, temp, d
                 "value": ConstellationChart[2]["content"],
                 "color": get_color()
             },
-            # 恋爱指数
+            # 财运指数
             "fortuneIndex": {
                 "value": ConstellationChart[3]["content"],
                 "color": get_color()
             },
-            # 财富指数
+            # 健康指数
             "healthIndex": {
                 "value": ConstellationChart[4]["content"],
                 "color": get_color()
@@ -263,11 +225,6 @@ def send_message(to_user, access_token, region_name, textDay, textNight, temp, d
             # 贵人星座
             "NobleConstellation": {
                 "value": ConstellationChart[7]["content"],
-                "color": get_color()
-            },
-            # 今天的你
-            "overviewToday": {
-                "value": ConstellationChart[8]["content"],
                 "color": get_color()
             }
         }
@@ -320,8 +277,8 @@ if __name__ == "__main__":
     region = config["region"]
     textDay, textNight, temp, dress = get_weather(region)
     # 天行数据
-    ChickenSoup, saylove, ConstellationChart = get_tian()
+    ConstellationChart = get_tian()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, textDay, textNight, temp, dress, ChickenSoup, saylove, ConstellationChart)
+        send_message(user, accessToken, region, textDay, textNight, temp, dress, ConstellationChart)
     os.system("pause")
